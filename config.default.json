@@ -1,0 +1,20 @@
+[{
+    "network_name": "autom",
+    "subnet": "172.20.0.0/16",
+    "containers": [{
+            "name": "test",
+            "tag": false,
+            "branch": "master",
+            "ip": "172.20.0.2",
+            "url": "git@test.com:test/test.git",
+            "volumes": {}
+        },
+        {
+            "name": "test",
+            "tag": true,
+            "ip": "172.20.0.3",
+            "url": "git@test.com:test/test.git",
+            "volumes": {}
+        }
+    ]
+}]
