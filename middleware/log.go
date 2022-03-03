@@ -19,13 +19,8 @@ func LogMiddleware() gin.HandlerFunc {
 		defer func() {
 			var user string
 			user = c.ClientIP()
-
-			logrus.Infof("%s|%s %s:%s", color.CyanString("%3s", "api"), color.WhiteString("%s", user), color.YellowString("%s", method), path)
-
 			latency := time.Since(start)
-			if latency > time.Second {
-				logrus.Warnf("%s|%s %s:%s, latency:%v", color.CyanString("%3s", "api"), color.WhiteString("%s", user), color.YellowString("%s", method), path, latency)
-			}
+			logrus.Infof("%s|%s %s:%s, latency:%v", color.CyanString("%3s", "api"), color.WhiteString("%s", user), color.YellowString("%s", method), path, latency)
 		}()
 
 		c.Next()

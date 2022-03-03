@@ -24,15 +24,15 @@ func Clone(c gitConf) bool {
 		return false
 	}
 
-	logrus.Infof("repository git clone success!")
+	logrus.Infof("repository git clone success")
 	return true
 }
 
 func Remove(c gitConf) {
 	err := os.RemoveAll(c.GetName())
 	if err != nil {
-		logrus.Infof("repository git remove failed!")
+		logrus.Infof("repository git remove failed")
 		return
 	}
-	logrus.Infof("repository git remove success!")
+	logrus.Infof("repository git remove success")
 }

@@ -69,7 +69,7 @@ func ContainerCreate(c containerConf) bool {
 
 	containers, err := cli.ContainerList(context.Background(), types.ContainerListOptions{
 		All:     true,
-		Filters: filters.NewArgs(filters.Arg("name", c.GetName())),
+		Filters: filters.NewArgs(filters.Arg("name", name)),
 	})
 	if err != nil {
 		logrus.Warnf("get docker container list failed: %s", err.Error())
@@ -82,17 +82,18 @@ func ContainerCreate(c containerConf) bool {
 		if container.State == "running" {
 			err := cli.ContainerStop(context.Background(), container.ID, nil)
 			if err != nil {
-				logrus.Warnf("stop docker old container failed: %s", err.Error())
+				logrus.Warnf("stop docker old container %s failed: %s", name, err.Error())
 				return false
 			}
-
+			logrus.Infof("stop docker old container %s success", name)
 		}
 
 		err := cli.ContainerRemove(context.Background(), container.ID, types.ContainerRemoveOptions{})
 		if err != nil {
-			logrus.Warnf("remove docker old container failed: %s", err.Error())
+			logrus.Warnf("remove docker old container %s failed: %s", name, err.Error())
 			return false
 		}
+		logrus.Infof("remove docker old container %s success", name)
 	}
 
 	b, err := cli.ContainerCreate(context.Background(), &container.Config{
@@ -100,20 +101,21 @@ func ContainerCreate(c containerConf) bool {
 	}, &container.HostConfig{
 		NetworkMode: container.NetworkMode(c.GetNetWorkName()),
 		Mounts:      m,
-	}, nc, nil, c.GetName())
+	}, nc, nil, name)
 	if err != nil {
-		logrus.Warnf("craete docker new container failed: %s", err.Error())
+		logrus.Warnf("craete docker container %s failed: %s", name, err.Error())
 		return false
 	}
 
-	logrus.Infof("create docker new container success, ID: %s", b.ID)
+	containerId := b.ID[0:6]
+	logrus.Infof("create docker container %s success, ID: %s", name, containerId)
 
 	err = cli.ContainerStart(context.Background(), b.ID, types.ContainerStartOptions{})
 	if err != nil {
-		logrus.Warnf("start docker container failed: %s", err.Error())
+		logrus.Warnf("start docker container %s failed: %s", name, err.Error())
 		return false
 	}
-	logrus.Infof("start docker container success, ID: %s", b.ID)
+	logrus.Infof("start docker container %s success, ID: %s", name, containerId)
 
 	return true
 }

@@ -22,6 +22,6 @@ func ImageBuild(c buildConf) bool {
 		return false
 	}
 
-	logrus.Infof("docker image build success!")
+	logrus.Infof("docker image build success")
 	return true
 }
