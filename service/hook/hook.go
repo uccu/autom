@@ -82,6 +82,10 @@ func (h *hook) GetBranch() string {
 	return h.body.GetBranch()
 }
 
+func (h *hook) IsTag() bool {
+	return h.body.GetEvent() == "tag_push"
+}
+
 func (h *hook) GetName() string {
 	return h.body.GetName()
 }

@@ -20,17 +20,17 @@ type containerConf interface {
 	GetIp() string
 	GetNetWorkName() string
 	GetVolumes() map[string]string
+	IsTag() bool
+	GetBranch() string
 }
 
 func ContainerCreate(c containerConf) bool {
 
 	cli, err := client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
-		logrus.Warn("获取docker客户端失败, %s", err.Error())
+		logrus.Warnf("get docker failed: %s", err.Error())
 		return false
 	}
-
-	logrus.Infof("创建容器")
 
 	dir, _ := os.Getwd()
 
@@ -62,12 +62,17 @@ func ContainerCreate(c containerConf) bool {
 		}
 	}
 
+	name := c.GetName()
+	if !c.IsTag() {
+		name += "_" + c.GetBranch()
+	}
+
 	containers, err := cli.ContainerList(context.Background(), types.ContainerListOptions{
 		All:     true,
 		Filters: filters.NewArgs(filters.Arg("name", c.GetName())),
 	})
 	if err != nil {
-		logrus.Warn("容器列表获取失败, %s", err.Error())
+		logrus.Warnf("get docker container list failed: %s", err.Error())
 		return false
 	}
 
@@ -77,7 +82,7 @@ func ContainerCreate(c containerConf) bool {
 		if container.State == "running" {
 			err := cli.ContainerStop(context.Background(), container.ID, nil)
 			if err != nil {
-				logrus.Warn("暂停老版本容器失败, %s", err.Error())
+				logrus.Warnf("stop docker old container failed: %s", err.Error())
 				return false
 			}
 
@@ -85,7 +90,7 @@ func ContainerCreate(c containerConf) bool {
 
 		err := cli.ContainerRemove(context.Background(), container.ID, types.ContainerRemoveOptions{})
 		if err != nil {
-			logrus.Warn("移除老版本容器失败, %s", err.Error())
+			logrus.Warnf("remove docker old container failed: %s", err.Error())
 			return false
 		}
 	}
@@ -97,19 +102,18 @@ func ContainerCreate(c containerConf) bool {
 		Mounts:      m,
 	}, nc, nil, c.GetName())
 	if err != nil {
-		logrus.Warn("创建容器失败, %s", err.Error())
+		logrus.Warnf("craete docker new container failed: %s", err.Error())
 		return false
 	}
 
-	logrus.Infof("创建容器成功, ID: %s", b.ID)
+	logrus.Infof("create docker new container success, ID: %s", b.ID)
 
-	logrus.Infof("启动容器, ID: %s", b.ID)
 	err = cli.ContainerStart(context.Background(), b.ID, types.ContainerStartOptions{})
 	if err != nil {
-		logrus.Warn("启动容器失败, %s", err.Error())
+		logrus.Warnf("start docker container failed: %s", err.Error())
 		return false
 	}
-	logrus.Infof("启动容器成功, ID: %s", b.ID)
+	logrus.Infof("start docker container success, ID: %s", b.ID)
 
 	return true
 }

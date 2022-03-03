@@ -20,13 +20,13 @@ func (*HookController) hook(c *gin.Context) {
 
 	client := hook.NewHookClient(c)
 	if client == nil {
-		logrus.Warn("配置不存在")
+		logrus.Warn("config not exist")
 		c.AbortWithStatus(404)
 		return
 	}
 
 	if !client.CheckRight() {
-		logrus.Warn("权限验证失败")
+		logrus.Warn("permission validation failed")
 		c.AbortWithStatus(404)
 		return
 	}

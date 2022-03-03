@@ -34,30 +34,27 @@ func NetworkCheck(name, ipstring string) {
 
 	ip, ipNet, err := net.ParseCIDR(ipstring)
 	if err != nil {
-		logrus.Warn("IP配置错误！")
+		logrus.Warnf("ipstring %s wrong", ipstring)
 		panic(err)
 	}
 	ip[15] = 1
 
 	cli, err := client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
-		logrus.Warn("获取docker客户端失败！")
+		logrus.Warnf("get docker failed: %s", err.Error())
 		panic(err)
 	}
-
-	logrus.Infof("检测docker是否存在网关")
 
 	networks, err := cli.NetworkList(context.Background(), types.NetworkListOptions{Filters: filters.NewArgs(filters.KeyValuePair{
 		Key: "name", Value: name,
 	})})
 
 	if err != nil {
-		logrus.Warn("获取docker网关失败！")
+		logrus.Warnf("get docker network list failed: %s", err.Error())
 		panic(err)
 	}
 
 	if len(networks) == 0 {
-		logrus.Infof("网关不存在，创建网关")
 		_, err := cli.NetworkCreate(context.Background(), "autom", types.NetworkCreate{
 			Driver: "bridge",
 			IPAM: &network.IPAM{
@@ -72,11 +69,11 @@ func NetworkCheck(name, ipstring string) {
 		})
 
 		if err != nil {
-			logrus.Warn("创建docker网关失败！")
+			logrus.Warnf("create docker network failed: %s", err.Error())
 			panic(err)
 		}
-		logrus.Infof("创建docker网关成功！")
+		logrus.Infof("create docker network success")
 	} else {
-		logrus.Infof("网关存在！")
+		logrus.Infof("docker network exist")
 	}
 }

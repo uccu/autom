@@ -20,18 +20,22 @@ func Clone(c gitConf) bool {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
-	err := cmd.Run()
+	output, err := cmd.CombinedOutput()
 	if err != nil {
+		logrus.Warnf("repository git clone failed: %s\n%s", err.Error(), output)
 		logrus.Warnf(err.Error())
 		return false
 	}
 
+	logrus.Infof("repository git clone success!")
 	return true
 }
 
 func Remove(c gitConf) {
 	err := os.RemoveAll(c.GetName())
 	if err != nil {
-		panic(err)
+		logrus.Infof("repository git remove failed!")
+		return
 	}
+	logrus.Infof("repository git remove success!")
 }

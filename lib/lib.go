@@ -26,14 +26,12 @@ func (ws *writers) WithFileWriter() *writers {
 	}
 
 	p := path.Dir(conf.Log.Path)
-	if p == "." {
-		return ws
-	}
-
-	err := os.MkdirAll(p, os.ModePerm)
-	if err != nil {
-		fmt.Printf("create log path dir `%s` err: %s", p, err.Error())
-		return ws
+	if p != "." {
+		err := os.MkdirAll(p, os.ModePerm)
+		if err != nil {
+			fmt.Printf("create log path dir `%s` err: %s", p, err.Error())
+			return ws
+		}
 	}
 
 	file, err := os.OpenFile(conf.Log.Path, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0600)
