@@ -17,13 +17,15 @@ func Clone(c gitConf) bool {
 
 	cmd := exec.Command("git", "clone", "-b", c.GetBranch(), "--single-branch", c.GetUrl(), c.GetName())
 
-	log, err := cmd.CombinedOutput()
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	err := cmd.Run()
 	if err != nil {
-		logrus.Warnf("git log: %s", string(log))
+		logrus.Warnf(err.Error())
 		return false
 	}
 
-	logrus.Infof("git log: %s", string(log))
 	return true
 }
 

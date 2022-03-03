@@ -23,7 +23,7 @@ type Hook interface {
 
 	GetBranch() string
 	GetName() string
-	Run()
+	Run() bool
 }
 
 func NewHookClient(c *gin.Context) Hook {
@@ -96,7 +96,7 @@ func (h *hook) GetImageName() string {
 
 func (h *hook) GetNetWorkName() string {
 	if h.conf.NetWork.Subnet == nil {
-		return ""
+		return "default"
 	}
 	return h.conf.NetWork.NetWorkName
 }
@@ -111,11 +111,11 @@ func (h *hook) GetVolumes() map[string]string {
 	return h.conf.Volumes
 }
 
-func (h *hook) Run() {
+func (h *hook) Run() bool {
 
 	if !h.conf.Tag {
 		if h.conf.Branch == nil || *h.conf.Branch != h.GetBranch() {
-			return
+			return false
 		}
 	}
 
@@ -124,11 +124,17 @@ func (h *hook) Run() {
 	}
 
 	if !git.Clone(h) {
-		return
+		return false
 	}
+	defer git.Remove(h)
+
 	if !docker.ImageBuild(h) {
-		return
+		return false
 	}
-	docker.ContainerCreate(h)
-	git.Remove(h)
+	if !docker.ContainerCreate(h) {
+		return false
+	}
+
+	return true
+
 }

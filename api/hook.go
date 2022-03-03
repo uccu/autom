@@ -25,14 +25,15 @@ func (*HookController) hook(c *gin.Context) {
 		return
 	}
 
-	client.CheckRight()
-
 	if !client.CheckRight() {
 		logrus.Warn("权限验证失败")
 		c.AbortWithStatus(404)
 		return
 	}
 
-	client.Run()
+	if !client.Run() {
+		c.AbortWithStatus(404)
+		return
+	}
 	middleware.Success(c)
 }

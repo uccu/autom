@@ -1,8 +1,8 @@
 __debug_bin
+__debug_bin.exe
 .vscode
-docs
-logs
 environment
 /test
 autom.pid
 /log
+build/
