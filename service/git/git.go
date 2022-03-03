@@ -17,9 +17,6 @@ func Clone(c gitConf) bool {
 
 	cmd := exec.Command("git", "clone", "-b", c.GetBranch(), "--single-branch", c.GetUrl(), c.GetName())
 
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		logrus.Warnf("repository git clone failed: %s\n%s", err.Error(), output)
