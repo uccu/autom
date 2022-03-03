@@ -4,6 +4,7 @@ import (
 	"autom/conf"
 	"log"
 	"os"
+	"os/exec"
 
 	"github.com/urfave/cli/v2"
 )
@@ -29,20 +30,30 @@ func Run() {
 						Value:   conf.Log.Path,
 						Usage:   "logger file path",
 					},
-					&cli.StringFlag{
+					&cli.IntFlag{
 						Name:    "port",
 						Aliases: []string{"p"},
 						Value:   conf.Http.Port,
 						Usage:   "port number used by the service",
 					},
+					&cli.BoolFlag{
+						Name:    "detach",
+						Aliases: []string{"d"},
+						Usage:   "run in background",
+					},
 				},
 				Usage: "start the service",
 				Action: func(c *cli.Context) error {
 
+					if c.Bool("detach") {
+						cmd := exec.Command(os.Args[0], "start", "-c", c.String("config"), "-l", c.String("logger"), "-p", c.String("port"))
+						return cmd.Start()
+					}
+
 					conf.ConfPath = c.String("config")
 					conf.Base.ConfPath = c.String("config")
 					conf.Log.Path = c.String("logger")
-					conf.Http.Port = c.String("port")
+					conf.Http.Port = c.Int("port")
 
 					return serverStart()
 				},

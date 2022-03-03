@@ -7,9 +7,8 @@ import (
 )
 
 type HttpConf struct {
-	Port           string
+	Port           int
 	HeaderCheck    bool
-	Token          string
 	TrustedProxies []string
 }
 

@@ -7,14 +7,16 @@
             "branch": "master",
             "ip": "172.20.0.2",
             "url": "git@test.com:test/test.git",
-            "volumes": {}
+            "volumes": {},
+            "token": "123123123123123"
         },
         {
             "name": "test",
             "tag": true,
             "ip": "172.20.0.3",
             "url": "git@test.com:test/test.git",
-            "volumes": {}
+            "volumes": {},
+            "token": "123123123123123"
         }
     ]
 }]

@@ -13,8 +13,7 @@ var Base BaseConf = BaseConf{
 	ConfPath:  "config.json",
 	TimeZone:  time.FixedZone("CST", 8*3600),
 	Http: HttpConf{
-		Port:        "2333",
-		Token:       "7310EB2871FFD196F5BB02A33BDCA359",
+		Port:        2333,
 		HeaderCheck: true,
 	},
 

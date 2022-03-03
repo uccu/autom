@@ -18,7 +18,7 @@ import (
 func serverStart() error {
 
 	lib.Init()
-	logrus.Infof("start autom success, port:%s", conf.Http.Port)
+	logrus.Infof("start autom success, port:%d", conf.Http.Port)
 	defer lib.Destroy()
 
 	pid := stringify.ToString(os.Getpid())
@@ -59,13 +59,16 @@ func serverStop() error {
 	pidPath := conf.PidPath
 
 	ioutil.WriteFile(pidPath, []byte("0"), 0600)
+
+	var times int
 	for {
 		line, err := ioutil.ReadFile(pidPath)
 		if err != nil {
 			return err
 		}
-		if string(line) != "-1" {
+		if string(line) != "-1" && times < 10 {
 			time.Sleep(500 * time.Millisecond)
+			times++
 			continue
 		}
 		break

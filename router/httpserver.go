@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
+	"github.com/uccu/go-stringify"
 )
 
 func HttpServerRun() {
@@ -13,8 +14,8 @@ func HttpServerRun() {
 	r := InitRouter()
 
 	go func() {
-		if err := r.Run(":" + conf.Http.Port); err != nil {
-			logrus.Errorf("HttpServerRun:%s err:%v", ":"+conf.Http.Port, err)
+		if err := r.Run(":" + stringify.ToString(conf.Http.Port)); err != nil {
+			logrus.Errorf("HttpServerRun:%s err:%v", ":"+stringify.ToString(conf.Http.Port), err)
 		}
 	}()
 }

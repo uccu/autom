@@ -43,6 +43,7 @@ type HookContainerConfig struct {
 	Url     string            `json:"url"`    // git拉取地址
 	Branch  *string           `json:"branch"` // 分支，当标签为false有效
 	Ip      *string           `json:"ip"`
+	Token   string            `json:"token"`
 	Volumes map[string]string `json:"volumes"`
 	NetWork *HookNetWorkConfig
 }

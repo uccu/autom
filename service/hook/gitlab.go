@@ -1,8 +1,7 @@
 package hook
 
 import (
-	"autom/conf"
-	"autom/http_error"
+	"github.com/sirupsen/logrus"
 )
 
 type GitlabHook struct {
@@ -14,12 +13,14 @@ func (h *GitlabHook) CheckRight() bool {
 
 	token := h.hook.c.GetHeader("X-Gitlab-Token")
 
-	if token == "" && conf.Http.Token != "" {
-		panic(http_error.NoXGitlabToken)
+	if token == "" && h.conf.Token != "" {
+		logrus.Warnf("未接收token")
+		return false
 	}
 
-	if token != conf.Http.Token {
-		panic(http_error.XGitlabTokenNotMatch)
+	if token != h.conf.Token {
+		logrus.Warnf("token不匹配")
+		return false
 	}
 
 	return h.hook.CheckRight()
