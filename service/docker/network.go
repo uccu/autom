@@ -30,19 +30,19 @@ func (i ip) GetG() string {
 	return string(i)[0:len(i)-1] + "1"
 }
 
-func NetworkCheck(name, ipstring string) {
+func NetworkCheck(name, ipstring string) bool {
 
 	ip, ipNet, err := net.ParseCIDR(ipstring)
 	if err != nil {
-		logrus.Warnf("ipstring %s wrong", ipstring)
-		panic(err)
+		logrus.Warnf("ipstring %s wrong: %s", ipstring, err.Error())
+		return false
 	}
 	ip[15] = 1
 
 	cli, err := client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
 		logrus.Warnf("get docker failed: %s", err.Error())
-		panic(err)
+		return false
 	}
 
 	networks, err := cli.NetworkList(context.Background(), types.NetworkListOptions{Filters: filters.NewArgs(filters.KeyValuePair{
@@ -51,7 +51,7 @@ func NetworkCheck(name, ipstring string) {
 
 	if err != nil {
 		logrus.Warnf("get docker network list failed: %s", err.Error())
-		panic(err)
+		return false
 	}
 
 	if len(networks) == 0 {
@@ -70,10 +70,12 @@ func NetworkCheck(name, ipstring string) {
 
 		if err != nil {
 			logrus.Warnf("create docker network failed: %s", err.Error())
-			panic(err)
+			return false
 		}
 		logrus.Infof("create docker network success")
 	} else {
 		logrus.Infof("docker network exist")
 	}
+
+	return true
 }

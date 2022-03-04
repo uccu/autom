@@ -1,6 +1,7 @@
 package hook
 
 import (
+	"autom/conf"
 	"encoding/json"
 	"io/ioutil"
 
@@ -52,16 +53,22 @@ func importConfig() HookContainerConfigList {
 
 	hookConfig := HookConfig{}
 
-	content, err := ioutil.ReadFile("config.json")
+	confPath, err := conf.GetConfPath()
 	if err != nil {
-		logrus.Warn("config.json 读取失败！")
-		panic(err)
+		logrus.Warnf("配置文件 %s 获取失败！", confPath)
+		return nil
+	}
+
+	content, err := ioutil.ReadFile(confPath)
+	if err != nil {
+		logrus.Warnf("配置文件 %s 读取失败！", confPath)
+		return nil
 	}
 
 	err = json.Unmarshal(content, &hookConfig)
 	if err != nil {
-		logrus.Warn("config.json 读取失败！")
-		panic(err)
+		logrus.Warn("配置文件 %s 解析失败！", confPath)
+		return nil
 	}
 
 	return hookConfig.ToHookContainer()

@@ -9,7 +9,7 @@ import (
 
 var Base BaseConf = BaseConf{
 	DebugMode: false,
-	PidPath:   "autom.pid",
+	PidPath:   "/opt/autom/autom.pid",
 	ConfPath:  "config.json",
 	TimeZone:  time.FixedZone("CST", 8*3600),
 	Http: HttpConf{

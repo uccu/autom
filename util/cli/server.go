@@ -22,8 +22,10 @@ func serverStart() error {
 	defer lib.Destroy()
 
 	pid := stringify.ToString(os.Getpid())
-	pidPath := conf.PidPath
-
+	pidPath, err := conf.GetPidPath()
+	if err != nil {
+		return err
+	}
 	ioutil.WriteFile(pidPath, []byte(pid), 0600)
 
 	quit := make(chan os.Signal)
@@ -56,7 +58,10 @@ func serverStart() error {
 
 func serverStop() error {
 
-	pidPath := conf.PidPath
+	pidPath, err := conf.GetPidPath()
+	if err != nil {
+		return err
+	}
 
 	ioutil.WriteFile(pidPath, []byte("0"), 0600)
 

@@ -23,11 +23,12 @@ type Docker struct {
 }
 
 type BaseConf struct {
-	Http      HttpConf
-	TimeZone  *time.Location
 	DebugMode bool
-	Log       LogConf
+	TimeZone  *time.Location
 	ConfPath  string
 	PidPath   string
+	WorkDir   string
+	Http      HttpConf
+	Log       LogConf
 	Docker    Docker
 }

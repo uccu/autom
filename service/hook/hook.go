@@ -34,7 +34,10 @@ func NewHookClient(c *gin.Context) Hook {
 	}
 
 	h.ParseBody()
-	h.conf = importConfig().Get(h.GetName(), h.Event() == "tag_push")
+	confs := importConfig()
+	if confs != nil {
+		h.conf = confs.Get(h.GetName(), h.Event() == "tag_push")
+	}
 
 	if h.conf == nil {
 		return nil

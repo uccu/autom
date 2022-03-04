@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"path"
 	"time"
 
 	"github.com/fatih/color"
@@ -21,22 +20,14 @@ func newWriters() *writers {
 
 func (ws *writers) WithFileWriter() *writers {
 
-	if conf.Log.Path == "" {
+	path, err := conf.GetLogPath()
+	if path == "" || err != nil {
 		return ws
 	}
 
-	p := path.Dir(conf.Log.Path)
-	if p != "." {
-		err := os.MkdirAll(p, os.ModePerm)
-		if err != nil {
-			fmt.Printf("create log path dir `%s` err: %s", p, err.Error())
-			return ws
-		}
-	}
-
-	file, err := os.OpenFile(conf.Log.Path, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0600)
+	file, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0600)
 	if err != nil {
-		fmt.Printf("open log file `%s` err: %s", conf.Log.Path, err.Error())
+		fmt.Printf("open log file `%s` err: %s", path, err.Error())
 		return ws
 	}
 

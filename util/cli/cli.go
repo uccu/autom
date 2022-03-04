@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 
+	"github.com/uccu/go-stringify"
 	"github.com/urfave/cli/v2"
 )
 
@@ -21,8 +22,14 @@ func Run() {
 					&cli.StringFlag{
 						Name:    "config",
 						Aliases: []string{"c"},
-						Value:   conf.ConfPath,
+						Value:   conf.Base.ConfPath,
 						Usage:   "configuration file path",
+					},
+					&cli.StringFlag{
+						Name:    "workdir",
+						Aliases: []string{"e"},
+						Value:   conf.Base.WorkDir,
+						Usage:   "workdir path",
 					},
 					&cli.StringFlag{
 						Name:    "logger",
@@ -45,15 +52,21 @@ func Run() {
 				Usage: "start the service",
 				Action: func(c *cli.Context) error {
 
-					if c.Bool("detach") {
-						cmd := exec.Command(os.Args[0], "start", "-c", c.String("config"), "-l", c.String("logger"), "-p", c.String("port"))
-						return cmd.Start()
-					}
-
-					conf.ConfPath = c.String("config")
 					conf.Base.ConfPath = c.String("config")
+					conf.Base.WorkDir = c.String("workdir")
 					conf.Log.Path = c.String("logger")
 					conf.Http.Port = c.Int("port")
+
+					if c.Bool("detach") {
+						cmd := exec.Command(
+							os.Args[0], "start",
+							"-c", conf.Base.ConfPath,
+							"-e", conf.Base.WorkDir,
+							"-l", conf.Log.Path,
+							"-p", stringify.ToString(conf.Http.Port),
+						)
+						return cmd.Start()
+					}
 
 					return serverStart()
 				},

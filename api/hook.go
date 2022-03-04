@@ -31,9 +31,6 @@ func (*HookController) hook(c *gin.Context) {
 		return
 	}
 
-	if !client.Run() {
-		c.AbortWithStatus(404)
-		return
-	}
+	go client.Run()
 	middleware.Success(c)
 }
