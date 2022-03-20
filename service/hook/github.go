@@ -7,7 +7,6 @@ import (
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/hex"
-	"fmt"
 	"io"
 
 	"github.com/sirupsen/logrus"
@@ -34,8 +33,6 @@ func (h *GithubHook) CheckRight(conf *HookContainerConfig) bool {
 	sig := hex.EncodeToString(hm.Sum(nil))
 
 	token := h.hook.c.GetHeader("X-Hub-Signature-256")
-
-	fmt.Println(h.hook.c.Request.Header)
 
 	if token == "" && conf.Token != "" {
 		logrus.Warnf("未接收token")
