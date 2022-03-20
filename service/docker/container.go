@@ -20,7 +20,7 @@ type containerConf interface {
 	GetIp() string
 	GetNetWorkName() string
 	GetVolumes() map[string]string
-	IsTag() bool
+	IsPush() bool
 	GetBranch() string
 }
 
@@ -63,7 +63,7 @@ func ContainerCreate(c containerConf) bool {
 	}
 
 	name := c.GetName()
-	if !c.IsTag() {
+	if c.IsPush() {
 		name += "_" + c.GetBranch()
 	}
 

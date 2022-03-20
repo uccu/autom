@@ -3,7 +3,7 @@
     "subnet": "172.20.0.0/16",
     "containers": [{
             "name": "test",
-            "tag": false,
+            "type": "push",
             "branch": "master",
             "ip": "172.20.0.2",
             "url": "git@test.com:test/test.git",
@@ -12,7 +12,7 @@
         },
         {
             "name": "test",
-            "tag": true,
+            "type": "tag_push",
             "ip": "172.20.0.3",
             "url": "git@test.com:test/test.git",
             "volumes": {},

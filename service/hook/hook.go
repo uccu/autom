@@ -2,7 +2,7 @@ package hook
 
 import (
 	"autom/service/docker"
-	"autom/util/request"
+	"autom/service/hook/body"
 
 	"autom/service/git"
 
@@ -10,138 +10,99 @@ import (
 )
 
 type Hook interface {
+	getConfs() HookContainerConfigList
+	parseBody()
+	parseConfs()
 
 	// gitlab/github/git/gitee等
 	GitType() string
 
-	// Push Hook/Tag Push Hoo
-	Event() string
-
-	CheckRight() bool
-
-	ParseBody()
-
-	GetBranch() string
-	GetName() string
-	Run() bool
+	CheckRight(*HookContainerConfig) bool
 }
 
 func NewHookClient(c *gin.Context) Hook {
-
-	h := hook{
-		c:       c,
-		gitType: "gitlab",
-	}
-
-	h.ParseBody()
-	confs := importConfig()
-	if confs != nil {
-		h.conf = confs.Get(h.GetName(), h.Event() == "tag_push")
-	}
-
-	if h.conf == nil {
-		return nil
-	}
-
-	if c.GetHeader("X-Gitlab-Event") != "" {
-		return &GitlabHook{
-			hook: h,
-		}
-	}
-	return &h
+	h := parseGitType(c, &hook{c: c})
+	h.parseBody()
+	h.parseConfs()
+	return h
 }
 
 type hook struct {
-	c       *gin.Context
-	gitType string
-	event   string
-	body    *HookBody
-	conf    *HookContainerConfig
+	c    *gin.Context
+	body body.Body
+	conf HookContainerConfigList
 }
 
 func (h *hook) GitType() string {
-	return h.gitType
+	return ""
 }
 
-func (h *hook) Event() string {
-	return h.event
+func (h *hook) CheckRight(conf *HookContainerConfig) bool {
+	return h.body.IsInvalid()
 }
 
-func (h *hook) CheckRight() bool {
-	if h.body.CheckoutSha == nil {
+func (h *hook) parseBody() {
+
+}
+
+func (h *hook) parseConfs() {
+	if h.body != nil {
+		confs := importConfig()
+		h.conf = confs.Filter(h.body)
+	}
+}
+
+func (h *hook) getConfs() HookContainerConfigList {
+	return h.conf
+}
+
+func Run(h Hook) {
+	for _, conf := range h.getConfs() {
+		if h.CheckRight(conf) {
+			runPush(conf)
+		}
+	}
+}
+
+func runPush(conf *HookContainerConfig) bool {
+
+	if conf.NetWork.Subnet != nil {
+		docker.NetworkCheck(conf.NetWork.NetWorkName, *conf.NetWork.Subnet)
+	}
+
+	if git.CheckCache(conf) {
 		return false
 	}
+
+	if !git.Clone(conf) {
+		return false
+	}
+
+	defer git.Remove(conf)
+
+	if !docker.ImageBuild(conf) {
+		return false
+	}
+	if !docker.ContainerCreate(conf) {
+		return false
+	}
+
 	return true
 }
 
-func (h *hook) ParseBody() {
-	var b HookBody
-	request.Bind(h.c, &b)
-	h.body = &b
-	h.event = h.body.GetEvent()
-}
+func parseGitType(c *gin.Context, h *hook) Hook {
 
-func (h *hook) GetBranch() string {
-	return h.body.GetBranch()
-}
-
-func (h *hook) IsTag() bool {
-	return h.body.GetEvent() == "tag_push"
-}
-
-func (h *hook) GetName() string {
-	return h.body.GetName()
-}
-
-func (h *hook) GetUrl() string {
-	return h.conf.Url
-}
-
-func (h *hook) GetImageName() string {
-	return h.GetName() + ":" + h.GetBranch()
-}
-
-func (h *hook) GetNetWorkName() string {
-	if h.conf.NetWork.Subnet == nil {
-		return "default"
-	}
-	return h.conf.NetWork.NetWorkName
-}
-
-func (h *hook) GetIp() string {
-	if h.conf.Ip == nil {
-		return ""
-	}
-	return *h.conf.Ip
-}
-func (h *hook) GetVolumes() map[string]string {
-	return h.conf.Volumes
-}
-
-func (h *hook) Run() bool {
-
-	if !h.conf.Tag {
-		if h.conf.Branch == nil || *h.conf.Branch != h.GetBranch() {
-			return false
+	if c.GetHeader("X-Gitlab-Event") != "" {
+		return &GitlabHook{
+			hook: *h,
 		}
 	}
 
-	if h.conf.NetWork.Subnet != nil {
-		docker.NetworkCheck(h.conf.NetWork.NetWorkName, *h.conf.NetWork.Subnet)
+	if c.GetHeader("X-Github-Event") == "push" {
+		return &GithubHook{
+			hook: *h,
+		}
 	}
 
-	if !git.Clone(h) {
-		return false
-	}
-	defer git.Remove(h)
-
-	if !docker.ImageBuild(h) {
-		return false
-	}
-	if !docker.ContainerCreate(h) {
-		return false
-	}
-
-	return true
-
+	return h
 }

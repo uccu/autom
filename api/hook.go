@@ -13,10 +13,20 @@ type HookController struct {
 
 func HookRegister(r *gin.RouterGroup) {
 	c := HookController{}
-	r.POST("/hook", c.hook)
+	r.Any("/hook", c.hook)
 }
 
 func (*HookController) hook(c *gin.Context) {
+
+	// byt, _ := ioutil.ReadAll(c.Request.Body)
+
+	// c.String(200, string(byt))
+
+	// fmt.Println(string(byt))
+	// fmt.Println()
+	// fmt.Println(c.Request.Header)
+
+	// return
 
 	client := hook.NewHookClient(c)
 	if client == nil {
@@ -25,12 +35,6 @@ func (*HookController) hook(c *gin.Context) {
 		return
 	}
 
-	if !client.CheckRight() {
-		logrus.Warn("permission validation failed")
-		c.AbortWithStatus(404)
-		return
-	}
-
-	go client.Run()
+	go hook.Run(client)
 	middleware.Success(c)
 }

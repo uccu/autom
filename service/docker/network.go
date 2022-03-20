@@ -3,6 +3,7 @@ package docker
 import (
 	"context"
 	"net"
+	"sync"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/filters"
@@ -13,6 +14,8 @@ import (
 )
 
 type ip string
+
+var networkChecklock sync.Mutex
 
 func (i ip) GetR() byte {
 
@@ -31,6 +34,9 @@ func (i ip) GetG() string {
 }
 
 func NetworkCheck(name, ipstring string) bool {
+
+	networkChecklock.Lock()
+	defer networkChecklock.Unlock()
 
 	ip, ipNet, err := net.ParseCIDR(ipstring)
 	if err != nil {

@@ -36,3 +36,11 @@ func Remove(c gitConf) {
 	}
 	logrus.Infof("repository git remove success")
 }
+
+// cache resp dir : ./cache_resp
+// cache tar dir: ./cache_tar
+// cache volumes dir
+func CheckCache(c gitConf) bool {
+
+	return true
+}

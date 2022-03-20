@@ -6,3 +6,4 @@ environment
 autom.pid
 /log
 build/
+config.json
