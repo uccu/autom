@@ -64,6 +64,22 @@ func Checkout(c gitConf) bool {
 	return true
 }
 
+func Pull(c gitConf) bool {
+
+	cmd := exec.Command("git", "pull")
+	cmd.Dir = c.GetName() + "/resp"
+
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		logrus.Warnf("repository git pull failed: %s\n%s", err.Error(), output)
+		logrus.Warnf(err.Error())
+		return false
+	}
+
+	logrus.Infof("repository git pull success")
+	return true
+}
+
 func Archive(c gitConf) bool {
 
 	cmd := exec.Command("git", "archive", c.GetBranch(), "-o", "../"+c.GetName()+".tar")

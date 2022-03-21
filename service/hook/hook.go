@@ -76,6 +76,16 @@ func runPush(conf *HookContainerConfig) bool {
 		if !git.Fetch(conf) {
 			return false
 		}
+
+		if conf.IsPush() {
+			if !git.Checkout(conf) {
+				return false
+			}
+
+			if !git.Pull(conf) {
+				return false
+			}
+		}
 	} else {
 		logrus.Infof("repository git cache not exist")
 		if !git.Clone(conf) {

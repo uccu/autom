@@ -39,7 +39,7 @@ func ContainerCreate(c containerConf) bool {
 
 		source := k
 		if !path.IsAbs(k) {
-			source = path.Join(dir, k)
+			source = path.Join(dir, c.GetName(), k)
 		}
 		err := os.MkdirAll(source, os.ModePerm)
 		if err != nil {

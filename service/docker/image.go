@@ -3,6 +3,7 @@ package docker
 import (
 	"bytes"
 	"context"
+	"io"
 	"io/ioutil"
 
 	"github.com/docker/docker/api/types"
@@ -23,13 +24,13 @@ func ImageBuild(c buildConf) bool {
 		return false
 	}
 
-	tar, err := ioutil.ReadFile(c.GetName() + ".tar")
+	tar, err := ioutil.ReadFile(c.GetName() + "/" + c.GetName() + ".tar")
 	if err != nil {
 		logrus.Warnf("read tar file failed: %s", err.Error())
 		return false
 	}
 
-	_, err = cli.ImageBuild(context.Background(), bytes.NewBuffer(tar), types.ImageBuildOptions{
+	res, err := cli.ImageBuild(context.Background(), bytes.NewBuffer(tar), types.ImageBuildOptions{
 		Tags: []string{c.GetImageName()},
 	})
 
@@ -38,14 +39,7 @@ func ImageBuild(c buildConf) bool {
 		return false
 	}
 
-	// cmd := exec.Command("docker", "build", "-t", c.GetImageName(), ".")
-	// cmd.Dir = c.GetName() + "/resp"
-
-	// output, err := cmd.CombinedOutput()
-	// if err != nil {
-	// 	logrus.Warnf("docker image build failed: %s\n%s", err.Error(), output)
-	// 	return false
-	// }
+	io.ReadAll(res.Body)
 
 	logrus.Infof("docker image build success")
 	return true

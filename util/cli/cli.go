@@ -2,6 +2,7 @@ package cli
 
 import (
 	"autom/conf"
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -76,6 +77,14 @@ func Run() {
 				Usage: "stop the service",
 				Action: func(c *cli.Context) error {
 					return serverStop()
+				},
+			},
+			{
+				Name:  "version",
+				Usage: "print version of autom",
+				Action: func(c *cli.Context) error {
+					fmt.Println("v0.1.3")
+					return nil
 				},
 			},
 		},
