@@ -1,12 +1,7 @@
 package main_test
 
 import (
-	"crypto/hmac"
-	"crypto/sha256"
-	"encoding/hex"
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net"
 	"os"
@@ -61,25 +56,4 @@ func CreateDir(path string) error {
 		return err
 	}
 	return nil
-}
-
-func TestExec2(t *testing.T) {
-
-	content, _ := ioutil.ReadFile("a.json")
-
-	var a interface{}
-	json.Unmarshal(content, &a)
-	b, _ := json.Marshal(a)
-
-	fmt.Println(string(b))
-
-	h := hmac.New(sha256.New, []byte("affe63ae92f9f8b451b0fb3979cf9dbc5ed52b2b"))
-	h.Write(b)
-	s := h.Sum(nil)
-	sig := hex.EncodeToString(s)
-
-	fmt.Println(sig)
-
-	// b890b2353e5f64e0a71ad85ddf1077d2f28915edff1684eaf0b431b464b32ae0
-	// 2707a7bd9eaa6c49c931c3eff7406a8568e24dded8f796854245d80ae85e106b
 }

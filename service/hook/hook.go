@@ -7,6 +7,7 @@ import (
 	"autom/service/git"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 type Hook interface {
@@ -70,15 +71,21 @@ func runPush(conf *HookContainerConfig) bool {
 		docker.NetworkCheck(conf.NetWork.NetWorkName, *conf.NetWork.Subnet)
 	}
 
-	if git.CheckCache(conf) {
-		return false
+	if git.HasCache(conf) {
+		logrus.Infof("repository git cache exist")
+		if !git.Fetch(conf) {
+			return false
+		}
+	} else {
+		logrus.Infof("repository git cache not exist")
+		if !git.Clone(conf) {
+			return false
+		}
 	}
 
-	if !git.Clone(conf) {
+	if !git.Archive(conf) {
 		return false
 	}
-
-	defer git.Remove(conf)
 
 	if !docker.ImageBuild(conf) {
 		return false

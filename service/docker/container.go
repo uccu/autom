@@ -103,7 +103,7 @@ func ContainerCreate(c containerConf) bool {
 		Mounts:      m,
 	}, nc, nil, name)
 	if err != nil {
-		logrus.Warnf("craete docker container %s failed: %s", name, err.Error())
+		logrus.Warnf("create docker container %s failed: %s", name, err.Error())
 		return false
 	}
 

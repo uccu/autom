@@ -47,6 +47,8 @@ func (m HookContainerConfigList) Filter(b body.Body) HookContainerConfigList {
 		if v.Name == b.GetName() {
 
 			if v.IsTagPsuh() && b.IsTagPsuh() {
+				branch := b.GetBranch()
+				v.Branch = &branch
 				list = append(list, v)
 			}
 
@@ -75,7 +77,7 @@ func (c *HookContainerConfig) GetUrl() string {
 }
 
 func (c *HookContainerConfig) GetBranch() string {
-	if c.IsPush() && c.Branch != nil {
+	if c.Branch != nil {
 		return *c.Branch
 	}
 	return ""

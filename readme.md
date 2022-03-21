@@ -79,7 +79,6 @@ autom start -l info.log
 #### 未来规划
 
 - 优化通过pid文件的方式开启关闭服务
-- docker image build 完全去命令模式，全部通过api操作
 - docker 支持远程api操作
 - 非git方式，文件上传方式/url下载方式更新项目
 - 用户系统
