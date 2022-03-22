@@ -1,13 +1,9 @@
 package hook
 
 import (
-	"autom/service/hook/body"
-	"autom/util/request"
-	"bytes"
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/base64"
-	"io"
 
 	"github.com/sirupsen/logrus"
 )
@@ -16,14 +12,6 @@ type GiteeHook struct {
 	hook
 	token   string
 	bodyRaw []byte
-}
-
-func (h *GiteeHook) parseBody() {
-	var b body.Body
-	h.bodyRaw, _ = io.ReadAll(h.c.Request.Body)
-	h.c.Request.Body = io.NopCloser(bytes.NewBuffer(h.bodyRaw))
-	request.Bind(h.c, &b)
-	h.body = &b
 }
 
 func (h *GiteeHook) CheckRight(conf *HookContainerConfig) bool {

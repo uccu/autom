@@ -1,21 +1,12 @@
 package hook
 
 import (
-	"autom/service/hook/body"
-	"autom/util/request"
-
 	"github.com/sirupsen/logrus"
 )
 
 type GitlabHook struct {
 	hook
 	token string
-}
-
-func (h *GitlabHook) parseBody() {
-	var b body.Body
-	request.Bind(h.c, &b)
-	h.body = &b
 }
 
 func (h *GitlabHook) CheckRight(conf *HookContainerConfig) bool {

@@ -2,6 +2,8 @@ package hook
 
 import (
 	"autom/service/docker"
+	"autom/service/hook/body"
+	"autom/util/request"
 
 	"autom/service/git"
 
@@ -50,7 +52,9 @@ func (h *hook) CheckRight(conf *HookContainerConfig) bool {
 }
 
 func (h *hook) parseBody() {
-
+	var b body.Body
+	request.Bind(h.c, &b)
+	h.body = &b
 }
 
 func (h *hook) parseConfs() {
