@@ -2,13 +2,20 @@ package hook
 
 import (
 	"autom/service/docker"
-	"autom/service/hook/body"
 
 	"autom/service/git"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
+
+type Body interface {
+	GetName() string
+	IsTagPsuh() bool
+	IsPush() bool
+	IsInvalid() bool
+	GetBranch() string
+}
 
 type Hook interface {
 	getConfs() HookContainerConfigList
@@ -30,7 +37,7 @@ func NewHookClient(c *gin.Context) Hook {
 
 type hook struct {
 	c    *gin.Context
-	body body.Body
+	body Body
 	conf HookContainerConfigList
 }
 
@@ -111,6 +118,12 @@ func parseGitType(c *gin.Context, h *hook) Hook {
 
 	if c.GetHeader("X-Gitlab-Event") != "" {
 		return &GitlabHook{
+			hook: *h,
+		}
+	}
+
+	if c.GetHeader("X-Gitee-Event") != "" {
+		return &GiteeHook{
 			hook: *h,
 		}
 	}

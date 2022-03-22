@@ -19,7 +19,7 @@ type GithubHook struct {
 }
 
 func (h *GithubHook) parseBody() {
-	var b body.GithubBody
+	var b body.Body
 	h.bodyRaw, _ = io.ReadAll(h.c.Request.Body)
 	h.c.Request.Body = io.NopCloser(bytes.NewBuffer(h.bodyRaw))
 	request.Bind(h.c, &b)
@@ -28,16 +28,16 @@ func (h *GithubHook) parseBody() {
 
 func (h *GithubHook) CheckRight(conf *HookContainerConfig) bool {
 
-	hm := hmac.New(sha256.New, []byte(conf.Token))
-	hm.Write(h.bodyRaw)
-	sig := hex.EncodeToString(hm.Sum(nil))
-
 	token := h.hook.c.GetHeader("X-Hub-Signature-256")
 
 	if token == "" && conf.Token != "" {
 		logrus.Warnf("未接收token")
 		return false
 	}
+
+	hm := hmac.New(sha256.New, []byte(conf.Token))
+	hm.Write(h.bodyRaw)
+	sig := hex.EncodeToString(hm.Sum(nil))
 
 	if token != "sha256="+string(sig) {
 		logrus.Warnf("token不匹配")

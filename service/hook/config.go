@@ -2,7 +2,6 @@ package hook
 
 import (
 	"autom/conf"
-	"autom/service/hook/body"
 	"encoding/json"
 	"io/ioutil"
 
@@ -41,7 +40,7 @@ type HookContainerConfig struct {
 
 type HookContainerConfigList []*HookContainerConfig
 
-func (m HookContainerConfigList) Filter(b body.Body) HookContainerConfigList {
+func (m HookContainerConfigList) Filter(b Body) HookContainerConfigList {
 	list := HookContainerConfigList{}
 	for _, v := range m {
 		if v.Name == b.GetName() {

@@ -1,6 +1,9 @@
 package main_test
 
 import (
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/base64"
 	"fmt"
 	"log"
 	"net"
@@ -56,4 +59,19 @@ func CreateDir(path string) error {
 		return err
 	}
 	return nil
+}
+
+func TestSign(t *testing.T) {
+
+	key := "1234567890"
+	val := "1647921033177" + "\n" + "1234567890"
+	h := hmac.New(sha256.New, []byte(key))
+
+	h.Write([]byte(val))
+	b := h.Sum(nil)
+
+	v := base64.StdEncoding.EncodeToString(b)
+
+	fmt.Println(v)
+
 }

@@ -13,7 +13,7 @@ type GitlabHook struct {
 }
 
 func (h *GitlabHook) parseBody() {
-	var b body.GitlabBody
+	var b body.Body
 	request.Bind(h.c, &b)
 	h.body = &b
 }
