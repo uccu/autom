@@ -1,7 +1,7 @@
 package main
 
 import (
-	"autom/util/cli"
+	"github.com/uccu/autom/util/cli"
 )
 
 func main() {

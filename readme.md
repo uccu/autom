@@ -7,6 +7,11 @@ web钩子连接地址：http://[host]:[port]/hook
 
 自动接收来自git的推送事件（目前支持push/tag_push）来构建运行目标项目, 并用反代或端口映射来暴露端口
 
+- 安装
+```sh
+go install github.com/uccu/autom
+```
+
 - 配置文件
 ```json
 [{

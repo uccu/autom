@@ -1,8 +1,8 @@
 package api
 
 import (
-	"autom/middleware"
-	"autom/service/hook"
+	"github.com/uccu/autom/middleware"
+	"github.com/uccu/autom/service/hook"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"

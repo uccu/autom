@@ -1,8 +1,9 @@
 package test
 
 import (
-	. "autom/conf/structs"
 	"time"
+
+	. "github.com/uccu/autom/conf/structs"
 
 	"github.com/sirupsen/logrus"
 )

@@ -1,9 +1,10 @@
 package hook
 
 import (
-	"autom/conf"
 	"encoding/json"
 	"io/ioutil"
+
+	"github.com/uccu/autom/conf"
 
 	"github.com/sirupsen/logrus"
 )

@@ -1,10 +1,10 @@
 package router
 
 import (
-	"autom/api"
-	"autom/conf"
+	"github.com/uccu/autom/api"
+	"github.com/uccu/autom/conf"
 
-	"autom/middleware"
+	"github.com/uccu/autom/middleware"
 
 	"github.com/gin-gonic/gin"
 )

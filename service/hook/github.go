@@ -1,13 +1,14 @@
 package hook
 
 import (
-	"autom/service/hook/body"
-	"autom/util/request"
 	"bytes"
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/hex"
 	"io"
+
+	"github.com/uccu/autom/service/hook/body"
+	"github.com/uccu/autom/util/request"
 
 	"github.com/sirupsen/logrus"
 )

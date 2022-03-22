@@ -1,15 +1,16 @@
 package cli
 
 import (
-	"autom/conf"
-	"autom/lib"
-	"autom/router"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/uccu/autom/conf"
+	"github.com/uccu/autom/lib"
+	"github.com/uccu/autom/router"
 
 	"github.com/sirupsen/logrus"
 	"github.com/uccu/go-stringify"

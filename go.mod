@@ -1,4 +1,4 @@
-module autom
+module github.com/uccu/autom
 
 go 1.16
 

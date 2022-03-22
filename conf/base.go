@@ -1,15 +1,16 @@
 package conf
 
 import (
-	"autom/conf/dev"
-	"autom/conf/prod"
-	structs "autom/conf/structs"
-	"autom/conf/test"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
 	"time"
+
+	"github.com/uccu/autom/conf/dev"
+	"github.com/uccu/autom/conf/prod"
+	structs "github.com/uccu/autom/conf/structs"
+	"github.com/uccu/autom/conf/test"
 )
 
 var Base structs.BaseConf

@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"autom/conf"
+	"github.com/uccu/autom/conf"
 
 	"github.com/gin-gonic/gin"
 )

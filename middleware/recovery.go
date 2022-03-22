@@ -1,11 +1,12 @@
 package middleware
 
 import (
-	"autom/conf"
-	"autom/http_error"
 	"fmt"
 	"runtime/debug"
 	"time"
+
+	"github.com/uccu/autom/conf"
+	"github.com/uccu/autom/http_error"
 
 	"github.com/sirupsen/logrus"
 

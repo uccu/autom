@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"autom/util/convert"
-	"autom/util/math"
+	"github.com/uccu/autom/util/convert"
+	"github.com/uccu/autom/util/math"
 
 	"github.com/gin-gonic/gin"
 )

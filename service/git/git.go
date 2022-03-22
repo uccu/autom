@@ -1,8 +1,9 @@
 package git
 
 import (
-	"autom/util/fs"
 	"os/exec"
+
+	"github.com/uccu/autom/util/fs"
 
 	"github.com/sirupsen/logrus"
 )

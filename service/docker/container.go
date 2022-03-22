@@ -12,6 +12,7 @@ import (
 	"github.com/docker/docker/api/types/network"
 	"github.com/docker/docker/client"
 	"github.com/sirupsen/logrus"
+	"github.com/uccu/autom/conf"
 )
 
 type containerConf interface {
@@ -32,14 +33,12 @@ func ContainerCreate(c containerConf) bool {
 		return false
 	}
 
-	dir, _ := os.Getwd()
-
 	m := []mount.Mount{}
 	for k, v := range c.GetVolumes() {
 
 		source := k
 		if !path.IsAbs(k) {
-			source = path.Join(dir, c.GetName(), k)
+			source = path.Join(conf.Base.WorkDir, c.GetName(), k)
 		}
 		err := os.MkdirAll(source, os.ModePerm)
 		if err != nil {

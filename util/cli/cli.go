@@ -1,11 +1,12 @@
 package cli
 
 import (
-	"autom/conf"
 	"fmt"
 	"log"
 	"os"
 	"os/exec"
+
+	"github.com/uccu/autom/conf"
 
 	"github.com/uccu/go-stringify"
 	"github.com/urfave/cli/v2"
@@ -83,7 +84,7 @@ func Run() {
 				Name:  "version",
 				Usage: "print version of autom",
 				Action: func(c *cli.Context) error {
-					fmt.Println("v0.1.3")
+					fmt.Println("v0.1.4")
 					return nil
 				},
 			},

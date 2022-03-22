@@ -1,11 +1,12 @@
 package lib
 
 import (
-	"autom/conf"
 	"fmt"
 	"io"
 	"os"
 	"time"
+
+	"github.com/uccu/autom/conf"
 
 	"github.com/fatih/color"
 	"github.com/sirupsen/logrus"

@@ -3,9 +3,10 @@ package request
 import (
 	"encoding/json"
 
-	"autom/http_error"
 	"fmt"
 	"io"
+
+	"github.com/uccu/autom/http_error"
 )
 
 type ShouldBind interface {

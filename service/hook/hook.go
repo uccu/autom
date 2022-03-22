@@ -1,11 +1,11 @@
 package hook
 
 import (
-	"autom/service/docker"
-	"autom/service/hook/body"
-	"autom/util/request"
+	"github.com/uccu/autom/service/docker"
+	"github.com/uccu/autom/service/hook/body"
+	"github.com/uccu/autom/util/request"
 
-	"autom/service/git"
+	"github.com/uccu/autom/service/git"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
