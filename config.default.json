@@ -1,22 +1,27 @@
-[{
-    "network_name": "autom",
-    "subnet": "172.20.0.0/16",
-    "containers": [{
-            "name": "test",
-            "type": "push",
-            "branch": "master",
-            "ip": "172.20.0.2",
-            "url": "git@test.com:test/test.git",
-            "volumes": {},
-            "token": "123123123123123"
-        },
-        {
-            "name": "test",
-            "type": "tag_push",
-            "ip": "172.20.0.3",
-            "url": "git@test.com:test/test.git",
-            "volumes": {},
-            "token": "123123123123123"
-        }
-    ]
-}]
+[
+    {
+        "network_name": "autom",
+        "subnet": "172.20.0.0/16",
+        "containers": [
+            {
+                "id": "test_push",
+                "name": "test",
+                "type": "push",
+                "branch": "master",
+                "ip": "172.20.0.2",
+                "url": "git@test.com:test/test.git",
+                "volumes": {},
+                "token": "123123123123123"
+            },
+            {
+                "id": "test_tag",
+                "name": "test",
+                "type": "tag_push",
+                "ip": "172.20.0.3",
+                "url": "git@test.com:test/test.git",
+                "volumes": {},
+                "token": "123123123123123"
+            }
+        ]
+    }
+]

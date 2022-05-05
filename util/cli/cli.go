@@ -45,6 +45,12 @@ func Run() {
 						Value:   conf.Http.Port,
 						Usage:   "port number used by the service",
 					},
+					&cli.StringFlag{
+						Name:    "id",
+						Aliases: []string{"i"},
+						Value:   "",
+						Usage:   "id of the running project",
+					},
 					&cli.BoolFlag{
 						Name:    "detach",
 						Aliases: []string{"d"},
@@ -56,8 +62,11 @@ func Run() {
 
 					conf.Base.ConfPath = c.String("config")
 					conf.Base.WorkDir = c.String("workdir")
-					conf.Log.Path = c.String("logger")
-					conf.Http.Port = c.Int("port")
+					conf.Base.Log.Path = c.String("logger")
+					conf.Base.Http.Port = c.Int("port")
+					conf.Log.Path = conf.Base.Log.Path
+					conf.Http.Port = conf.Base.Http.Port
+					id := c.String("id")
 
 					if c.Bool("detach") {
 						cmd := exec.Command(
@@ -65,9 +74,14 @@ func Run() {
 							"-c", conf.Base.ConfPath,
 							"-e", conf.Base.WorkDir,
 							"-l", conf.Log.Path,
+							"-i", id,
 							"-p", stringify.ToString(conf.Http.Port),
 						)
 						return cmd.Start()
+					}
+
+					if id != "" {
+						return runSingle(id)
 					}
 
 					return serverStart()

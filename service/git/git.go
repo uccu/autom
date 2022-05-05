@@ -83,6 +83,11 @@ func Pull(c gitConf) bool {
 
 func Archive(c gitConf) bool {
 
+	if !fs.PathExists(c.GetName() + "/resp/Dockerfile") {
+		logrus.Infof("repository's Dockerfile not exist, non archive")
+		return false
+	}
+
 	cmd := exec.Command("git", "archive", c.GetBranch(), "-o", "../"+c.GetName()+".tar")
 	cmd.Dir = c.GetName() + "/resp"
 

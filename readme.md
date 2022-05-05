@@ -80,6 +80,12 @@ autom start -e /home/autom
 autom start -l info.log
 ```
 
+- 运行指定脚本
+
+```sh
+autom start -i test:v1.1
+```
+
 
 #### 未来规划
 

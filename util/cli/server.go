@@ -11,6 +11,7 @@ import (
 	"github.com/uccu/autom/conf"
 	"github.com/uccu/autom/lib"
 	"github.com/uccu/autom/router"
+	"github.com/uccu/autom/service/hook"
 
 	"github.com/sirupsen/logrus"
 	"github.com/uccu/go-stringify"
@@ -84,4 +85,27 @@ func serverStop() error {
 	fmt.Println("stop autom success")
 	return nil
 
+}
+
+func runSingle(id string) error {
+
+	hookContainerConfigList := hook.ImportConfig()
+
+	nameSlice := stringify.ToStringSlice(id, ":")
+	if len(nameSlice) < 2 {
+		logrus.Warnf("请指定版本: %s！", id)
+		return nil
+	}
+	id = nameSlice[0]
+	branch := nameSlice[1]
+
+	hookContainerConfig := hookContainerConfigList.GetById(id)
+	if hookContainerConfig == nil {
+		logrus.Warnf("配置ID %s 获取失败或不存在！", id)
+		return nil
+	}
+	hookContainerConfig.Branch = &branch
+
+	hook.RunPush(hookContainerConfig)
+	return nil
 }

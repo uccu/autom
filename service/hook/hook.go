@@ -59,7 +59,7 @@ func (h *hook) parseBody() {
 
 func (h *hook) parseConfs() {
 	if h.body != nil {
-		confs := importConfig()
+		confs := ImportConfig()
 		h.conf = confs.Filter(h.body)
 	}
 }
@@ -71,12 +71,12 @@ func (h *hook) getConfs() HookContainerConfigList {
 func Run(h Hook) {
 	for _, conf := range h.getConfs() {
 		if h.CheckRight(conf) {
-			runPush(conf)
+			RunPush(conf)
 		}
 	}
 }
 
-func runPush(conf *HookContainerConfig) bool {
+func RunPush(conf *HookContainerConfig) bool {
 
 	if conf.NetWork.Subnet != nil {
 		docker.NetworkCheck(conf.NetWork.NetWorkName, *conf.NetWork.Subnet)

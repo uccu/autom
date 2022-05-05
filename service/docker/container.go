@@ -68,7 +68,7 @@ func ContainerCreate(c containerConf) bool {
 
 	containers, err := cli.ContainerList(context.Background(), types.ContainerListOptions{
 		All:     true,
-		Filters: filters.NewArgs(filters.Arg("name", "^"+name+"$")),
+		Filters: filters.NewArgs(filters.Arg("name", "^\\/?"+name+"$")),
 	})
 	if err != nil {
 		logrus.Warnf("get docker container list failed: %s", err.Error())

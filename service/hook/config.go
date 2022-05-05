@@ -29,6 +29,7 @@ type HookNetWorkConfig struct {
 }
 
 type HookContainerConfig struct {
+	Id      string            `json:"id"`     // 项目ID
 	Name    string            `json:"name"`   // 项目名字
 	Type    string            `json:"type"`   // 推送类型 push/tag_push
 	Url     string            `json:"url"`    // git拉取地址
@@ -58,6 +59,15 @@ func (m HookContainerConfigList) Filter(b Body) HookContainerConfigList {
 		}
 	}
 	return list
+}
+
+func (m HookContainerConfigList) GetById(id string) *HookContainerConfig {
+	for _, v := range m {
+		if v.Id == id {
+			return v
+		}
+	}
+	return nil
 }
 
 func (c *HookContainerConfig) GetName() string {
@@ -104,7 +114,7 @@ func (c *HookContainerConfig) GetVolumes() map[string]string {
 	return c.Volumes
 }
 
-func importConfig() HookContainerConfigList {
+func ImportConfig() HookContainerConfigList {
 
 	hookConfig := HookConfig{}
 
