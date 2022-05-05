@@ -7,3 +7,8 @@ autom.pid
 /log
 build/
 config.json
+*.tar
+*.tar.gz
+*.tar.xz
+*.exe
+*.zip
